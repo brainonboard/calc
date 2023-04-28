@@ -31,5 +31,23 @@ public class CalcServiceImpl implements ICalcService {
     public double calculate(BigDecimal first, BigDecimal second, String operation) {
 
     	LOGGER.debug( "{} : {} {} {}", C_CALCULATING_OPERATION,first, second, operation);
+
+        EOperation operacion = EOperation.valueOf(operation); 
+
+        if(operacion == null) {
+            throw new RuntimeException(String.format("{}: {}",C_UNSUPPORTED_OPERATION, operation));
+        }
+
+        switch (operacion) {
+            case A:
+                return first.add(second).doubleValue();
+            case S:
+                return first.subtract(second).doubleValue();
+            default:
+                if(LOGGER.isErrorEnabled()) {
+                    LOGGER.error("{}: {}", C_UNSUPPORTED_OPERATION, operacion);
+                }
+                throw new RuntimeException(String.format("{}: {}",C_UNSUPPORTED_OPERATION, operacion.toString()));
+        }
     }
 }
